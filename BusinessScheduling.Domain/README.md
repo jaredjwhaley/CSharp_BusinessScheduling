@@ -1,52 +1,54 @@
-# Business Scheduling Domain
+# BusinessScheduling.Domain
 
-This repository contains a domain model for a generalized business scheduling system.
-It is intentionally framework-agnostic and focuses on enforcing core business rules
-related to scheduling, availability, and operating constraints.
+This project contains the **domain layer** for the Business Scheduling system.
 
-## Goals
+It is intentionally framework-agnostic and focuses exclusively on modeling
+business concepts, rules, and constraints related to scheduling and compensation.
+No infrastructure, persistence, UI, or application orchestration logic exists here.
 
-- Model real-world scheduling concepts in a way that prevents invalid states
-- Keep business rules close to the data they govern
-- Remain independent of storage, UI, and framework concerns
-- Support reuse across multiple business domains (e.g., retail, healthcare, services)- Demonstrate clean DDD architecture
-- Showcase C#/.NET proficiency
-- Provide a foundation for REST API integration or document/OCR workflows
-- Build maintainable, testable, and scalable domain models
+## Responsibilities of the Domain Layer
 
-## Non-Goals
+- Model core business concepts and their relationships
+- Enforce business rules and invariants
+- Prevent invalid states through explicit modeling
+- Remain independent of external technologies and frameworks
 
-- User interfaces
+## What Belongs Here
+
+- Aggregates that enforce consistency boundaries
+- Entities with identity and lifecycle
+- Value Objects that are immutable and compared by value
+- Domain services for cross-aggregate operations
+- Domain events representing significant occurrences
+- Repository interfaces defining persistence contracts
+
+## What Does NOT Belong Here
+
 - Database access or ORM configuration
-- Web frameworks or APIs
-- Application workflows or orchestration logic
-
-## Core Concepts
-
-This domain models concepts such as:
-- Employees
-- Availability and operating hours
-- Schedules and time constraints
-- Appointments and bookings
-
-Business rules are enforced within the domain model itself rather than
-being delegated to external services.
+- Web APIs, controllers, or UI concerns
+- Application workflows or coordination logic
+- File storage, messaging, or infrastructure details
 
 ## Design Principles
 
 - Invalid states should be difficult or impossible to represent
-- Domain objects own their own invariants
-- All external concerns are handled by higher layers
+- Business rules live close to the data they govern
+- Aggregates protect their own invariants
+- External systems interact with the domain through clear boundaries
 
 ## Folder Structure
-- `Aggregates/` – Clusters of entities with a single root, enforcing consistency
-- `Entities/` – Objects with unique identity and lifecycle
+
+- `Aggregates/` – Consistency boundaries with a single aggregate root
+- `Entities/` – Objects with identity and lifecycle
 - `ValueObjects/` – Immutable objects compared by value
-- `Repositories/` – Abstract storage and retrieval of aggregates
-- `Services/` – Domain-specific operations that do not belong to a single entity
-- `Events/` – Represent significant occurrences within the domain
+- `Repositories/` – Interfaces for retrieving and persisting aggregates
+- `Services/` – Domain operations not naturally owned by a single entity
+- `Events/` – Represent significant domain occurrences
 
 ## Status
 
-This project is under active development. The initial focus is on
-core scheduling primitives and rules.
+The domain is under active development. Current focus areas include:
+- Scheduling primitives
+- Compensation rules
+- Time-based constraints
+- Clear documentation of domain intent

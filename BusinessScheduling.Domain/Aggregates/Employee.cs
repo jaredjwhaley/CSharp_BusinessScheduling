@@ -24,8 +24,8 @@ public sealed class Employee
         if (personId == Guid.Empty)
             throw new ArgumentException("Employee must reference a valid Person.");
 
-        if (hourlyRate <= 0)
-            throw new ArgumentException("Hourly rate must be positive.");
+        if (hourlyRate < 0)
+            throw new ArgumentException("Hourly rate must be greater than or equal to zero.");
 
         Id = id ?? Guid.NewGuid();
         PersonId = personId;
@@ -41,6 +41,8 @@ public sealed class Employee
 
         _timeOff.Add(timeOff);
     }
+
+    #region Payroll Calculations
 
     public decimal CalculatePayout(DateTimeRange period)
     {
@@ -81,6 +83,8 @@ public sealed class Employee
         var totalDays = period.Duration.TotalDays;
         return dailyRate * (decimal)totalDays;
     }
+
+    #endregion
 
     public void Deactivate() => IsActive = false;
     public void Reactivate() => IsActive = true;

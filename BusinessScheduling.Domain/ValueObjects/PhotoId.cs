@@ -20,6 +20,9 @@ public sealed class PhotoId : IEquatable<PhotoId>
         ExpirationDate = expirationDate;
     }
 
+
+    #region Equality by Value
+
     public bool Equals(PhotoId? other)
     {
         if (other is null) return false;
@@ -32,4 +35,6 @@ public sealed class PhotoId : IEquatable<PhotoId>
 
     public override int GetHashCode()
         => HashCode.Combine(FilePath, ExpirationDate);
+
+    #endregion
 }

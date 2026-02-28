@@ -15,6 +15,9 @@ public sealed class Address : IEquatable<Address>
         PostalCode = postalCode;
     }
 
+
+    #region Equality by Value
+
     public bool Equals(Address? other)
     {
         if (other is null) return false;
@@ -29,4 +32,6 @@ public sealed class Address : IEquatable<Address>
 
     public override int GetHashCode()
         => HashCode.Combine(Street, City, State, PostalCode);
+
+    #endregion
 }
