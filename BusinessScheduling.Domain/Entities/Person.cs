@@ -16,16 +16,20 @@ namespace BusinessScheduling.Domain.Entities
         public DateOnly DateOfBirth { get; private set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        // TODO: Add format verification for email and phone number if needed in the future.
+        // This could be done through a value object or by adding validation logic in the setters for these properties.
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
         // Value objects
         /// <summary>
-        /// The unique identifier for the <see cref="PhotoId"> on file for this client.
+        /// The optional <see cref="PhotoId">photo ID</see> associated with the person,
+        /// which is required for certain operations such as appointments.
         /// </summary>
-        public Guid PhotoIdGuid { get; set; }
+        public PhotoId? PhotoId { get; set; }
         /// <summary>
-        /// Gets or sets the street address information associated with the entity.
+        /// The <see cref="Address">physical address</see> associated with the entity.
         /// </summary>
         public Address Address { get; set; }
 
@@ -51,17 +55,17 @@ namespace BusinessScheduling.Domain.Entities
         /// <param name="address">The address associated with the person. Cannot be null.</param>
         /// <param name="email">The email address of the person. If not specified, defaults to an empty string.</param>
         /// <param name="phoneNumber">The phone number of the person. If not specified, defaults to an empty string.</param>
-        /// <param name="photoIdGuid">An optional GUID representing the person's photo ID. If not specified, defaults to an empty GUID. This is required for appointments.</param>
+        /// <param name="photoId">A technically optional <see cref="PhotoId"/>. This is required for appointments in our current design.</param>
         /// <param name="id">An optional unique identifier for the person. If not specified, a new GUID is generated.</param>
         /// <exception cref="ArgumentNullException">Thrown if firstName, lastName, dateOfBirth, or address is null.</exception>
         public Person(
             string firstName,
             string lastName,
-            DateOnly ?dateOfBirth,
+            DateOnly? dateOfBirth,
             Address address,
             string email = "",
             string phoneNumber = "",
-            Guid? photoIdGuid = null,
+            PhotoId? photoId = null,
             Guid? id = null)
         {
             FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
@@ -70,7 +74,7 @@ namespace BusinessScheduling.Domain.Entities
             Address = address ?? throw new ArgumentNullException(nameof(address));
             Email = email;
             PhoneNumber = phoneNumber;
-            PhotoIdGuid = photoIdGuid ?? Guid.Empty;
+            PhotoId = photoId;
             Id = id ?? Guid.NewGuid();
         }
     }

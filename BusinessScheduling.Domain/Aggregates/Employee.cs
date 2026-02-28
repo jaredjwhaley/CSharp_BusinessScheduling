@@ -21,7 +21,7 @@ public sealed class Employee
     /// Gets the hourly rate for the employee.
     /// </summary>
     /// <remarks>This is used in payout calculation for all <see cref="CompensationType">compensation types</see>.</remarks>
-    public decimal HourlyRate { get; set; }
+    public decimal HourlyRate { get; private set; }
     public CompensationType CompensationType { get; private set; }
     /// <summary>
     /// Gets a value indicating whether the employee is currently employed with the business.
@@ -88,6 +88,13 @@ public sealed class Employee
             throw new InvalidOperationException("Submitted hours worked overlaps an existing submission.");
 
         _loggedHours.Add(dateTimeRange);
+    }
+
+    public void UpdateHourlyRate(decimal newHourlyRate)
+    {
+        if (newHourlyRate < 0)
+            throw new ArgumentException("Hourly rate must be greater than or equal to zero.");
+        HourlyRate = newHourlyRate;
     }
 
     #region Payroll Calculations

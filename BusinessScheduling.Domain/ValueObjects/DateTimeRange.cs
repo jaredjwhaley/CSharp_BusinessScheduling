@@ -15,7 +15,7 @@ namespace BusinessScheduling.Domain.ValueObjects
         /// </summary>
         public TimeSpan Duration {
             get {
-                return Start - End;
+                return End - Start;
             }
         }
 
