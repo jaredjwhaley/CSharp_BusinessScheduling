@@ -3,12 +3,16 @@
 namespace BusinessScheduling.Domain.ValueObjects
 {
     /// <summary>
-    /// Represents a period of time with a start and end.
+    /// Represents a period of time with a <see cref="DateTime"/> start and end.
     /// </summary>
     public sealed class DateTimeRange : IEquatable<DateTimeRange>
     {
         public DateTime Start { get; }
         public DateTime End { get; }
+
+        /// <summary>
+        /// Gets the duration represented by the <see cref="TimeSpan"/> between the start and end points of the range.
+        /// </summary>
         public TimeSpan Duration {
             get {
                 return Start - End;
