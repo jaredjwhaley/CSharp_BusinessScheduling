@@ -44,6 +44,31 @@ namespace BusinessScheduling.Domain.ValueObjects
             return Start < other.End && End > other.Start;
         }
 
+        /// <summary>
+        /// Determines whether the specified date and time falls within the range defined by the start and end dates.
+        /// </summary>
+        /// <remarks>This method checks if the provided dateTime is greater than or equal to the Start
+        /// date and less than or equal to the End date.</remarks>
+        /// <param name="dateTime">The date and time to check for inclusion within the range.</param>
+        /// <returns>true if the specified date and time is within the range; otherwise, false.</returns>
+        public bool Contains(DateTime dateTime)
+        {
+            return Start <= dateTime && End >= dateTime;
+        }
+
+        /// <summary>
+        /// Determines whether the current range fully contains the specified date and time range.
+        /// </summary>
+        /// <remarks>The method returns true only if the start of the current range is less than or equal
+        /// to the start of the specified range, and the end of the current range is greater than or equal to the end of
+        /// the specified range.</remarks>
+        /// <param name="dateTimeRange">The date and time range to test for containment within the current range.</param>
+        /// <returns>true if the current range completely contains the specified date and time range; otherwise, false.</returns>
+        public bool Contains(DateTimeRange dateTimeRange)
+        {
+            return Start <= dateTimeRange.Start && End >= dateTimeRange.End;
+        }
+
         #region Equality by Value
 
         /// <summary>
