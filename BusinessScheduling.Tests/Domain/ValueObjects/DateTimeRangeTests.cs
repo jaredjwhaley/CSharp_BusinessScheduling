@@ -111,17 +111,17 @@ public class DateTimeRangeTests
         Assert.True(overlaps);
     }
 
-    [Fact]
-    public void Overlaps_WhenRangesDoNotOverlap_ReturnsFalse()
+    [Theory]
+    [InlineData("2026-02-28 10:00", "2026-02-28 10:59", "2026-02-28 11:00", "2026-02-28 12:00")]
+    [InlineData("2026-02-28 10:00", "2026-02-28 11:00", "2026-02-28 11:00", "2026-02-28 12:00")]
+    public void Overlaps_WhenRangesDoNotOverlap_ReturnsFalse(string dts1, string dts2, string dts3, string dts4)
     {
         // Arrange
         var range1 = new DateTimeRange(
-            DateTime.Parse("2026-02-28 10:00"),
-            DateTime.Parse("2026-02-28 11:00"));
+            DateTime.Parse(dts1), DateTime.Parse(dts2));
 
         var range2 = new DateTimeRange(
-            DateTime.Parse("2026-02-28 11:00"),
-            DateTime.Parse("2026-02-28 12:00"));
+            DateTime.Parse(dts3), DateTime.Parse(dts4));
 
         // Act
         var overlaps = range1.Overlaps(range2);
