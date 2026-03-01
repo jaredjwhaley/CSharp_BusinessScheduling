@@ -7,45 +7,22 @@ namespace BusinessScheduling.Tests.Domain.ValueObjects
     public class PhotoIdTests
     {
         #region Constructor Tests
-        [Fact]
-        public void Constructor_WhenFileNameIsNull_ThrowsArgumentException()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void Constructor_WhenFileNameInvalid_ThrowsArgumentException(string? fileName)
         {
             // Arrange
-            string? fileName = null;
             var expirationDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(1);
 
             // Act
-            // NOTE: "!" added after the fileName variable to suppress nullable warning since we're intentionally
-            // passing null to test the constructor's behavior.
             Action act = () => new PhotoId(fileName!, expirationDate);
 
             // Assert
             Assert.Throws<ArgumentException>(act);
         }
 
-        [Fact]
-        public void Constructor_WhenFileNameIsEmpty_ThrowsArgumentException()
-        {
-            // Arrange
-            string fileName = "";
-            var expirationDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(1);
-            // Act
-            Action act = () => new PhotoId(fileName, expirationDate);
-            // Assert
-            Assert.Throws<ArgumentException>(act);
-        }
-
-        [Fact]
-        public void Constructor_WhenFileNameIsWhitespace_ThrowsArgumentException()
-        {
-            // Arrange
-            string fileName = "   ";
-            var expirationDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(1);
-            // Act
-            Action act = () => new PhotoId(fileName, expirationDate);
-            // Assert
-            Assert.Throws<ArgumentException>(act);
-        }
 
         [Fact]
         public void Constructor_WhenExpirationDateIsNull_ThrowsArgumentException()
@@ -135,6 +112,20 @@ namespace BusinessScheduling.Tests.Domain.ValueObjects
             var areEqual = photoId1.Equals(photoId2);
             // Assert
             Assert.False(areEqual);
+        }
+
+        [Fact]
+        public void Equals_WhenOtherIsNull_ReturnsFalse()
+        {
+            var photoId = new PhotoId("file.jpg", DateOnly.FromDateTime(DateTime.UtcNow));
+            Assert.False(photoId.Equals(null));
+        }
+
+        [Fact]
+        public void Equals_WhenObjectIsNotPhotoId_ReturnsFalse()
+        {
+            var photoId = new PhotoId("file.jpg", DateOnly.FromDateTime(DateTime.UtcNow));
+            Assert.False(photoId.Equals("some string"));
         }
         #endregion
     }
