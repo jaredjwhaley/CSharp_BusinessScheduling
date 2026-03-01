@@ -6,6 +6,7 @@ namespace BusinessScheduling.Tests.Domain.ValueObjects;
 
 public class DateTimeRangeTests
 {
+    #region Constructor Tests
     [Fact]
     public void Constructor_WhenStartIsEqualToEnd_ThrowsArgumentException()
     {
@@ -51,4 +52,112 @@ public class DateTimeRangeTests
         Assert.Equal(start, range.Start);
         Assert.Equal(end, range.End);
     }
+    #endregion
+
+    #region Contains Tests
+    [Fact]
+    public void Contains_WhenDateTimeIsWithinRange_ReturnsTrue()
+    {
+        // Arrange
+        var range = new DateTimeRange(
+            DateTime.Parse("2026-02-28 10:00"),
+            DateTime.Parse("2026-02-28 12:00"));
+
+        var inside = DateTime.Parse("2026-02-28 11:00");
+
+        // Act
+        var result = range.Contains(inside);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void Contains_WhenDateTimeIsOutsideRange_ReturnsFalse()
+    {
+        // Arrange
+        var range = new DateTimeRange(
+            DateTime.Parse("2026-02-28 10:00"),
+            DateTime.Parse("2026-02-28 12:00"));
+
+        var outside = DateTime.Parse("2026-02-28 12:01");
+
+        // Act
+        var result = range.Contains(outside);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    #endregion
+
+    #region Overlaps Tests
+    [Fact]
+    public void Overlaps_WhenRangesOverlap_ReturnsTrue()
+    {
+        // Arrange
+        var range1 = new DateTimeRange(
+            DateTime.Parse("2026-02-28 10:00"),
+            DateTime.Parse("2026-02-28 12:00"));
+
+        var range2 = new DateTimeRange(
+            DateTime.Parse("2026-02-28 11:00"),
+            DateTime.Parse("2026-02-28 13:00"));
+
+        // Act
+        var overlaps = range1.Overlaps(range2);
+
+        // Assert
+        Assert.True(overlaps);
+    }
+
+    [Fact]
+    public void Overlaps_WhenRangesDoNotOverlap_ReturnsFalse()
+    {
+        // Arrange
+        var range1 = new DateTimeRange(
+            DateTime.Parse("2026-02-28 10:00"),
+            DateTime.Parse("2026-02-28 11:00"));
+
+        var range2 = new DateTimeRange(
+            DateTime.Parse("2026-02-28 11:00"),
+            DateTime.Parse("2026-02-28 12:00"));
+
+        // Act
+        var overlaps = range1.Overlaps(range2);
+
+        // Assert
+        Assert.False(overlaps);
+    }
+    #endregion
+
+    #region Equality Tests
+    [Fact]
+    public void Equals_WhenStartAndEndMatch_ReturnsTrue()
+    {
+        // Arrange
+        var start = DateTime.Parse("2026-02-28 10:00");
+        var end = DateTime.Parse("2026-02-28 11:00");
+
+        var range1 = new DateTimeRange(start, end);
+        var range2 = new DateTimeRange(start, end);
+
+        // Act & Assert
+        Assert.Equal(range1, range2);
+    }
+
+    [Fact]
+    public void Equals_WhenValuesDiffer_ReturnsFalse()
+    {
+        var range1 = new DateTimeRange(
+            DateTime.Parse("2026-02-28 10:00"),
+            DateTime.Parse("2026-02-28 11:00"));
+
+        var range2 = new DateTimeRange(
+            DateTime.Parse("2026-02-28 10:00"),
+            DateTime.Parse("2026-02-28 12:00"));
+
+        Assert.NotEqual(range1, range2);
+    }
+    #endregion
 }

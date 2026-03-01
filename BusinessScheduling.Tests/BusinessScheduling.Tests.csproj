@@ -23,13 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
-	<Folder Include="Domain\" />
     <Folder Include="Domain\Aggregates\" />
     <Folder Include="Domain\Entities\" />
     <Folder Include="Domain\Events\" />
 	<Folder Include="Domain\Repositories\" />
     <Folder Include="Domain\Services\" />
-	<Folder Include="Domain\ValueObjects\" />
   </ItemGroup>
 
 </Project>
