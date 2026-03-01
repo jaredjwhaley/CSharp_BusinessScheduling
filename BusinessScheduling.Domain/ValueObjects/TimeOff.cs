@@ -19,6 +19,8 @@ public sealed class TimeOff : IEquatable<TimeOff>
     /// <param name="type">The type of time off being requested, which determines the nature of the absence.</param>
     public TimeOff(DateTimeRange range, TimeOffType type)
     {
+        if (range is null)
+            throw new ArgumentNullException(nameof(range), "TimeOff must have a valid date range.");
         Range = range;
         Type = type;
     }
