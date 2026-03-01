@@ -56,13 +56,14 @@ public sealed class PhotoId : IEquatable<PhotoId>
     {
         if (otherId is null) return false;
 
-        return FileName == otherId.FileName;
+        return FileName == otherId.FileName
+            && ExpirationDate == otherId.ExpirationDate;
     }
 
     public override bool Equals(object? obj) => Equals(obj as PhotoId);
 
     public override int GetHashCode()
-        => HashCode.Combine(FileName);
+        => HashCode.Combine(FileName, ExpirationDate);
 
     #endregion
 }
