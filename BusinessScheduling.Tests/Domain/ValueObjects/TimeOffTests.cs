@@ -1,7 +1,5 @@
 ﻿using BusinessScheduling.Domain.ValueObjects;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Xunit;
 
 namespace BusinessScheduling.Tests.Domain.ValueObjects
@@ -9,6 +7,7 @@ namespace BusinessScheduling.Tests.Domain.ValueObjects
     public class TimeOffTests
     {
         #region Constructor Tests
+
         [Fact]
         public void Constructor_WhenRangeIsNull_ThrowsArgumentNullException()
         {
@@ -24,12 +23,10 @@ namespace BusinessScheduling.Tests.Domain.ValueObjects
         }
 
         [Fact]
-        public void Constructor_WhenTypeIsValid_CreatesInstance()
+        public void Constructor_WhenGivenValidRangeAndType_CreatesInstance()
         {
             // Arrange
-            var range = new DateTimeRange(
-                DateTime.Parse("2026-02-28 10:00"),
-                DateTime.Parse("2026-02-28 11:00"));
+            var range = new DateTimeRange(DateTime.Now, DateTime.Now.AddHours(4));
             var type = TimeOffType.SickLeave;
 
             // Act
@@ -39,152 +36,118 @@ namespace BusinessScheduling.Tests.Domain.ValueObjects
             Assert.Equal(range, timeOff.Range);
             Assert.Equal(type, timeOff.Type);
         }
+
         #endregion
 
         #region Equality Tests
+
         [Fact]
         public void Equals_WhenRangeAndTypeMatch_ReturnsTrue()
         {
             // Arrange
-            var range = new DateTimeRange(
-                DateTime.Parse("2026-02-28 10:00"),
-                DateTime.Parse("2026-02-28 11:00"));
-            var type = TimeOffType.Bereavement;
-
-            var t1 = new TimeOff(range, type);
-            var t2 = new TimeOff(range, type);
+            var range = new DateTimeRange(DateTime.Now, DateTime.Now.AddHours(4));
+            var type = TimeOffType.PaidTimeOff;
+            var timeOff1 = new TimeOff(range, type);
+            var timeOff2 = new TimeOff(range, type);
 
             // Act
-            var areEqual = t1.Equals(t2);
+            var result = timeOff1.Equals(timeOff2);
 
             // Assert
-            Assert.True(areEqual);
+            Assert.True(result);
         }
 
         [Fact]
         public void Equals_WhenRangeDiffers_ReturnsFalse()
         {
-            var t1 = new TimeOff(
-                new DateTimeRange(
-                    DateTime.Parse("2026-02-28 10:00"),
-                    DateTime.Parse("2026-02-28 11:00")),
-                TimeOffType.JuryDuty);
+            // Arrange
+            var range1 = new DateTimeRange(DateTime.Now, DateTime.Now.AddHours(4));
+            var range2 = new DateTimeRange(DateTime.Now, DateTime.Now.AddHours(5));
+            var type = TimeOffType.PaidTimeOff;
 
-            var t2 = new TimeOff(
-                new DateTimeRange(
-                    DateTime.Parse("2026-02-28 11:00"),
-                    DateTime.Parse("2026-02-28 12:00")),
-                TimeOffType.JuryDuty);
+            var timeOff1 = new TimeOff(range1, type);
+            var timeOff2 = new TimeOff(range2, type);
 
-            Assert.False(t1.Equals(t2));
+            // Act & Assert
+            Assert.False(timeOff1.Equals(timeOff2));
         }
 
         [Fact]
         public void Equals_WhenTypeDiffers_ReturnsFalse()
         {
-            var range = new DateTimeRange(
-                DateTime.Parse("2026-02-28 10:00"),
-                DateTime.Parse("2026-02-28 11:00"));
-
-            var t1 = new TimeOff(range, TimeOffType.PaidTimeOff);
-            var t2 = new TimeOff(range, TimeOffType.UnpaidLeave);
-
-            Assert.False(t1.Equals(t2));
-        }
-        #endregion
-
-        #region Theory with InlineData (Simple examples)
-        [Theory]
-        [InlineData("2026-02-28 10:00", "2026-02-28 11:00", "2026-02-28 10:00", "2026-02-28 11:00")]
-        [InlineData("2026-02-28 09:00", "2026-02-28 10:00", "2026-02-28 09:00", "2026-02-28 10:00")]
-        public void Equals_WithInlineData_ReturnsTrue(string s1, string e1, string s2, string e2)
-        {
             // Arrange
-            var t1 = new TimeOff(
-                new DateTimeRange(DateTime.Parse(s1), DateTime.Parse(e1)),
-                TimeOffType.PaidTimeOff);
-            var t2 = new TimeOff(
-                new DateTimeRange(DateTime.Parse(s2), DateTime.Parse(e2)),
-                TimeOffType.PaidTimeOff);
+            var range = new DateTimeRange(DateTime.Now, DateTime.Now.AddHours(4));
+            var timeOff1 = new TimeOff(range, TimeOffType.PaidTimeOff);
+            var timeOff2 = new TimeOff(range, TimeOffType.SickLeave);
 
             // Act & Assert
-            Assert.Equal(t1, t2);
+            Assert.False(timeOff1.Equals(timeOff2));
         }
+
         #endregion
 
-        #region Theory with MemberData (Dynamic object arrays)
+        #region MemberData Testing Example
 
-        // MemberData requires a static property, field, or method returning IEnumerable<object[]>
-        // Each object[] corresponds to the parameters for one test case
-        public static IEnumerable<object[]> TimeOffEqualityData =>
+        // MemberData allows us to provide complex or reusable datasets for a Theory.
+        // Here we define a static property returning IEnumerable<object[]>.
+        // Each object[] represents a separate set of parameters for the test method.
+        public static IEnumerable<object[]> TimeOffData =>
             new List<object[]>
             {
-                new object[]
-                {
-                    new TimeOff(
-                        new DateTimeRange(DateTime.Parse("2026-02-28 08:00"), DateTime.Parse("2026-02-28 09:00")),
-                        TimeOffType.SickLeave),
-                    new TimeOff(
-                        new DateTimeRange(DateTime.Parse("2026-02-28 08:00"), DateTime.Parse("2026-02-28 09:00")),
-                        TimeOffType.SickLeave),
-                    true
-                },
-                new object[]
-                {
-                    new TimeOff(
-                        new DateTimeRange(DateTime.Parse("2026-02-28 08:00"), DateTime.Parse("2026-02-28 09:00")),
-                        TimeOffType.PaidTimeOff),
-                    new TimeOff(
-                        new DateTimeRange(DateTime.Parse("2026-02-28 08:00"), DateTime.Parse("2026-02-28 09:30")),
-                        TimeOffType.PaidTimeOff),
-                    false
-                }
+                new object[] { new DateTimeRange(DateTime.Parse("2026-02-28 09:00"), DateTime.Parse("2026-02-28 13:00")), TimeOffType.PaidTimeOff },
+                new object[] { new DateTimeRange(DateTime.Parse("2026-02-28 10:00"), DateTime.Parse("2026-02-28 14:00")), TimeOffType.SickLeave },
+                new object[] { new DateTimeRange(DateTime.Parse("2026-02-28 08:00"), DateTime.Parse("2026-02-28 12:00")), TimeOffType.JuryDuty }
             };
 
         [Theory]
-        [MemberData(nameof(TimeOffEqualityData))]
-        public void Equals_WithMemberData(TimeOff t1, TimeOff t2, bool expected)
+        [MemberData(nameof(TimeOffData))]
+        public void Constructor_WithMemberData_CreatesValidInstance(DateTimeRange range, TimeOffType type)
         {
-            // Act
-            var result = t1.Equals(t2);
+            var timeOff = new TimeOff(range, type);
 
-            // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(range, timeOff.Range);
+            Assert.Equal(type, timeOff.Type);
         }
+
         #endregion
 
-        #region ClassData Example (Dynamic generation for all TimeOffTypes)
+        #region ClassData Testing Example (Dynamic Enum Coverage)
 
-        // This class implements IEnumerable<object[]> and dynamically generates a TimeOff for each enum value
-        public class AllTimeOffTypesProvider : IEnumerable<object[]>
+        // ClassData is like MemberData but encapsulates the dataset in a separate class.
+        // Here, we dynamically provide one instance for each TimeOffType in the enum.
+        public class TimeOffTypeProvider : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {
                 foreach (TimeOffType type in Enum.GetValues(typeof(TimeOffType)))
                 {
-                    // Here we're generating a TimeOff instance for each type dynamically
+                    // For each TimeOffType, create a simple valid DateTimeRange and supply as object[]
+                    // NOTE: "yield" allows us to return each item one at a time without needing to build the entire list in memory.
                     yield return new object[]
                     {
-                        new TimeOff(
-                            new DateTimeRange(
-                                DateTime.Parse("2026-02-28 10:00"),
-                                DateTime.Parse("2026-02-28 11:00")),
-                            type)
+                        // For testing purposes, we can use the same DateTimeRange for all types since we're focusing on enum coverage.
+                        new DateTimeRange(DateTime.Today, DateTime.Today.AddHours(4)),
+                        // The TimeOffType value from the loop.
+                        type
                     };
                 }
             }
 
+            // This non-generic GetEnumerator is required by IEnumerable. It simply calls the generic version.
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
         [Theory]
-        [ClassData(typeof(AllTimeOffTypesProvider))]
-        public void Constructor_ForAllTimeOffTypes_CreatesInstance(TimeOff timeOff)
+        [ClassData(typeof(TimeOffTypeProvider))]
+        public void Constructor_WithClassData_CreatesInstanceForAllEnumValues(DateTimeRange range, TimeOffType type)
         {
-            // This demonstrates how ClassData can dynamically supply complex objects to your tests
-            Assert.NotNull(timeOff);
-            Assert.IsType<TimeOff>(timeOff);
+            // This test runs once for every TimeOffType value, so we dynamically verify coverage
+            var timeOff = new TimeOff(range, type);
+
+            Assert.Equal(range, timeOff.Range);
+            Assert.Equal(type, timeOff.Type);
         }
+
         #endregion
     }
 }
