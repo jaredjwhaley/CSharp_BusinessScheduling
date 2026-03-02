@@ -22,12 +22,4 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Domain\Aggregates\" />
-    <Folder Include="Domain\Entities\" />
-    <Folder Include="Domain\Events\" />
-	<Folder Include="Domain\Repositories\" />
-    <Folder Include="Domain\Services\" />
-  </ItemGroup>
-
 </Project>
